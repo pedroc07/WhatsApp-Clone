@@ -2,11 +2,12 @@ import threading
 import queue
 import socket
 
-contatos = [("localhost", 8102)]
-
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = input("Digite a porta: ")
-server.bind("localhost", int(port))
+port2 = input("Digite a porta do destinatário: ")
+server.bind(("localhost", int(port)))
+
+contatos = [("localhost", int(port2))]
 
 def receive():
     while True:
@@ -17,14 +18,16 @@ def receive():
             pass
 
 def send(msg):
-    while True:
-        for cliente in contatos:
-            try:
-                server.sendto(msg.encode(), cliente)
-            except:
-                contatos.remove(cliente)
-                
+    for cliente in contatos:
+        try:
+            server.sendto(msg.encode(), cliente)
+            print(f"Mensagem enviada a {cliente}")
+        except:
+            contatos.remove(cliente)
+
+t1 = threading.Thread(target=receive)
+t1.start()
 
 while True:
     msg = input()
-    server.send(msg)
+    send(msg)
