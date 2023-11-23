@@ -1,5 +1,6 @@
 import threading
 import socket
+import uuid
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = "localhost"
@@ -13,6 +14,10 @@ server.bind((endereco, int(port)))
 
 contatos = [("127.0.0.1", int(port2))]
 nicknames = {}
+relogio_logico = 0
+
+def relogio():
+    pass
 
 def receive():
     while True:
@@ -21,6 +26,7 @@ def receive():
             if msg.decode().startswith("ENTROU_TAG"):
                 nicknames[end] = msg.decode()[11:]
                 contatos.append(end)
+                print(contatos)
                 print(f"Abre alas. {nicknames[end]} entrou na conversa!")
                 send(f"ENVIA_TAG:{nick}")
             elif msg.decode().startswith("ENVIA_TAG"):
@@ -30,7 +36,13 @@ def receive():
                 if not end in contatos:
                     contatos.append(end)
             else:
-                print(f"{nicknames[end]}:{msg.decode()}")
+                m = msg.decode().split("/")
+                print(m[0])
+                if relogio_logico < int(m[0]):
+                    relogio_logico = int(m[0]) + 1
+                else:
+                    relogio_logico += 1
+                print(f"({relogio_logico}){nicknames[end]}:{m[2]}")
         except:
             pass
 
@@ -49,6 +61,9 @@ send(f"ENTROU_TAG:{nick}")
 sair_chat = False
 while not sair_chat:
     msg = input()
+    relogio_logico += 1
+    id = uuid.uuid1()
+    msg = str(relogio_logico) + "/" + str(id.int) + "/" + msg
     if msg == "!q":
         sair_chat = True
     else:
