@@ -1,6 +1,7 @@
 import threading
 import socket
 import uuid
+import json
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = "localhost"
@@ -16,55 +17,56 @@ contatos = [("localhost", int(port2))]
 nicknames = {}
 relogio_logico = 0
 
-def relogio():
-    pass
-
 def receive():
     while True:
         try:
-            msg, end = server.recvfrom(1024) 
-            if msg.decode().startswith("ENTROU_TAG"):
-                nicknames[end] = msg.decode()[11:]
+            data, end = server.recvfrom(1024) 
+            msg = data.decode('utf-8')
+            m = json.loads(msg)
+            print(m)
+            if msg.decode('utf-8').startswith("ENTROU_TAG"):
+                nicknames[end] = msg.decode('utf-8')[11:]
                 contatos.append(end)
                 print(contatos)
                 print(f"Abre alas. {nicknames[end]} entrou na conversa!")
-                send(f"ENVIA_TAG:{nick}")
-            elif msg.decode().startswith("ENVIA_TAG"):
+                res_envia = json.dumps({relogio_logico, 0, f"ENVIA_TAG:{nick}"})
+                send(res_envia)
+            elif msg.decode('utf-8').startswith("ENVIA_TAG"):
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[end] = msg.decode()[10:]
+                nicknames[end] = msg.decode('utf-8')[10:]
                 if not end in contatos:
                     contatos.append(end)
             else:
-                m = msg.decode().split("/")
-                print(m[0])
-                '''if relogio_logico < int(m[0]):
-                    relogio_logico = int(m[0]) + 1
-                else:
-                    relogio_logico += 1'''
-                print(f"({relogio_logico}){nicknames[end]}:{m[2]}")
+                pacote = msg.decode('utf-8')
+                t = int(pacote[0])
+                if relogio_logico < t:
+                    relogio_logico = t
+                relogio_logico += 1
+                print(f"({relogio_logico}){nicknames[end]}:{pacote[2]}")
         except:
             pass
 
 def send(msg):
     for cliente in contatos:
         try:
-            server.sendto(msg.encode(), cliente)
+            server.sendto(msg.encode('utf-8'), cliente)
         except:
             contatos.remove(cliente)
 
 t1 = threading.Thread(target=receive)
 t1.start()
 
-send(f"ENTROU_TAG:{nick}")
+res_entrou = json.dumps({relogio_logico, 0, f"ENTROU_TAG:{nick}"})
+send(res_entrou)
 
 sair_chat = False
 while not sair_chat:
     msg = input()
     relogio_logico += 1
     id = uuid.uuid1()
-    msg = str(relogio_logico) + "/" + str(id.int) + "/" + msg
+    res = json.dumps({relogio_logico, id.int, msg})
     if msg == "!q":
         sair_chat = True
     else:
-        send(msg)
+        send(res)
