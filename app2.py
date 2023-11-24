@@ -15,35 +15,33 @@ server.bind((endereco, int(port)))
 
 contatos = [("127.0.0.1", int(port2))]
 nicknames = {}
-relogio_logico = 0
+relogio_logico = [0]
 
 def receive():
     while True:
         try:
             data, end = server.recvfrom(1024) 
-            msg = data.decode('utf-8')
-            m = json.loads(msg)
-            print(m)
-            if msg.decode('utf-8').startswith("ENTROU_TAG"):
-                nicknames[end] = msg.decode('utf-8')[11:]
+            p = data.decode('utf-8')
+            pacote = json.loads(p)
+            if pacote["msg"].startswith("ENTROU_TAG"):
+                nicknames[end] = pacote["msg"][11:]
                 contatos.append(end)
                 print(contatos)
                 print(f"Abre alas. {nicknames[end]} entrou na conversa!")
-                res_envia = json.dumps({relogio_logico, 0, f"ENVIA_TAG:{nick}"})
+                res_envia = json.dumps({"t":relogio_logico, "id":0, "msg":f"ENVIA_TAG:{nick}"})
                 send(res_envia)
-            elif msg.decode('utf-8').startswith("ENVIA_TAG"):
+            elif pacote["msg"].startswith("ENVIA_TAG"):
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[end] = msg.decode('utf-8')[10:]
+                nicknames[end] = pacote["msg"][10:]
                 if not end in contatos:
                     contatos.append(end)
             else:
-                pacote = msg.decode('utf-8')
-                t = int(pacote[0])
-                if relogio_logico < t:
-                    relogio_logico = t
-                relogio_logico += 1
-                print(f"({relogio_logico}){nicknames[end]}:{pacote[2]}")
+                if relogio_logico[0] < int(pacote["t"]):
+                    relogio_logico[0] = int(pacote["t"])
+                relogio_logico[0] += 1
+                print(f"la nele {pacote['t']}")
+                print(f"{relogio_logico}{nicknames[end]}:{pacote['msg']}")
         except:
             pass
 
@@ -57,15 +55,15 @@ def send(msg):
 t1 = threading.Thread(target=receive)
 t1.start()
 
-res_entrou = json.dumps({relogio_logico, id.int, f"ENTROU_TAG:{nick}"})
+res_entrou = json.dumps({"t":0, "id":1, "msg":f"ENTROU_TAG:{nick}"})
 send(res_entrou)
 
 sair_chat = False
 while not sair_chat:
     msg = input()
-    relogio_logico += 1
+    relogio_logico[0] += 1
     id = uuid.uuid1()
-    res = json.dumps({relogio_logico, 0, msg})
+    res = json.dumps({"t":0, "id":id.int, "msg":msg})
     if msg == "!q":
         sair_chat = True
     else:
