@@ -28,7 +28,7 @@ def receive():
                 contatos.append(end)
                 print(contatos)
                 print(f"Abre alas. {nicknames[end]} entrou na conversa!")
-                res_envia = json.dumps({"t":relogio_logico, "id":0, "msg":f"ENVIA_TAG:{nick}"})
+                res_envia = json.dumps({"t":0, "id":0, "msg":f"ENVIA_TAG:{nick}"})
                 send(res_envia)
             elif pacote["msg"].startswith("ENVIA_TAG"):
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
@@ -40,7 +40,6 @@ def receive():
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                 relogio_logico[0] += 1
-                print(f"la nele {pacote['t']}")
                 print(f"{relogio_logico}{nicknames[end]}:{pacote['msg']}")
         except:
             pass
@@ -63,7 +62,7 @@ while not sair_chat:
     msg = input()
     relogio_logico[0] += 1
     id = uuid.uuid1()
-    res = json.dumps({"t":0, "id":id.int, "msg":msg})
+    res = json.dumps({"t":relogio_logico[0], "id":id.int, "msg":msg})
     if msg == "!q":
         sair_chat = True
     else:
