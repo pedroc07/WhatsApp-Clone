@@ -4,9 +4,9 @@ import uuid
 import json
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "localhost"
+endereco = "127.0.0.1"
 #port = input("Digite a porta: ")
-port = 8105
+port = 8108
 #port2 = input("Digite a porta do destinatário: ")
 port2 = 8102
 #nick = input("Digite seu nome: ")
@@ -20,7 +20,7 @@ relogio_logico = [0]
 def receive():
     while True:
         try:
-            data, end = server.recvfrom(1024) 
+            data, end = server.recvfrom(1024)
             p = data.decode('utf-8')
             pacote = json.loads(p)
             if pacote["msg"].startswith("ENTROU_TAG"):
@@ -39,7 +39,8 @@ def receive():
             else:
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                relogio_logico[0] += 1
+                else:
+                    relogio_logico[0] += 1
                 print(f"{relogio_logico}{nicknames[end]}:{pacote['msg']}")
         except:
             pass
@@ -56,6 +57,7 @@ t1.start()
 
 res_entrou = json.dumps({"t":0, "id":1, "msg":f"ENTROU_TAG:{nick}"})
 send(res_entrou)
+print
 
 sair_chat = False
 while not sair_chat:

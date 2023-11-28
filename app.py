@@ -4,16 +4,16 @@ import uuid
 import json
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "localhost"
+endereco = "127.0.0.1"
 #port = input("Digite a porta: ")
 port = 8102
 #port2 = input("Digite a porta do destinatário: ")
-port2 = 8101
+port2 = 8108
 #nick = input("Digite seu nome: ")
 nick = "Bonaparte"
 server.bind((endereco, int(port)))
 
-contatos = [("localhost", int(port2))]
+contatos = []
 nicknames = {}
 relogio_logico = [0]
 
@@ -39,7 +39,8 @@ def receive():
             else:
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                relogio_logico[0] += 1
+                else:
+                    relogio_logico[0] += 1
                 print(f"{relogio_logico}{nicknames[end]}:{pacote['msg']}")
         except:
             pass
