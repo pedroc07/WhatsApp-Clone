@@ -3,6 +3,7 @@ import socket
 import uuid
 import json
 import os
+import re
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = "127.0.0.1"
@@ -31,9 +32,8 @@ def receive():
                     contatos.append(end)
                 else:
                     for m in mensagens:
-                        id = uuid.uuid1()
-                        res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":id.int, "msg":mensagens[m]})
-                    send(res_historico)
+                        res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
+                        send(res_historico)
                 mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for m in mensagens:
@@ -52,9 +52,21 @@ def receive():
             elif pacote["tag"] == "MSG_TAG":
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                else:
-                    relogio_logico[0] += 1
-                mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                elif relogio_logico[0] == int(pacote["t"]):
+                    ultima_msg = mensagens.keys()[-1]
+                    if ultima_msg > int(pacote["id"]):
+                        relogio_logico[0] += 1
+                        mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                    else:
+                        mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                        re.sub(str(relogio_logico), "", mensagens[ultima_msg])
+                        relogio_logico[0] += 1
+                        mensagens[ultima_msg] = (f"{relogio_logico}{mensagens[ultima_msg]}")
+                elif relogio_logico[0] > int(pacote["t"]):
+                    relogio_logico[0] = int(pacote["t"])
+                    id = uuid.uuid1()
+                    mensagens[id] = "ERRO AO SINCRONIZAR MENSAGENS"
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for m in mensagens:
                     print(mensagens[m])
