@@ -30,8 +30,9 @@ def receive():
                 if not end in contatos:
                     contatos.append(end)
                 else:
-                    id = uuid.uuid1()
-                    res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":id.int, "msg":mensagens})
+                    for m in mensagens:
+                        id = uuid.uuid1()
+                        res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":id.int, "msg":mensagens[m]})
                     send(res_historico)
                 mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
                 os.system('cls' if os.name == 'nt' else 'clear')
@@ -46,6 +47,8 @@ def receive():
                 nicknames[end] = pacote["msg"]
                 if not end in contatos:
                     contatos.append(end)
+            elif pacote["tag"] == "HISTORICO_TAG":
+                mensagens[pacote["id"]] = pacote["msg"]
             elif pacote["tag"] == "MSG_TAG":
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
