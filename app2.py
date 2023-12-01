@@ -39,14 +39,18 @@ def receive():
                 for m in mensagens:
                     print(mensagens[m])
                 id = uuid.uuid1()
-                res_envia = json.dumps({"tag":"ENVIA_TAG", "t":0, "id":id.int, "msg":f"{nick}"})
-                send(res_envia)
-            elif pacote["tag"] == "ENVIA_TAG":
+                res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":(endereco, int(port)), "nick":nick})
+                send(res_cont)
+                for c in contatos:
+                    id = uuid.uuid1()
+                    res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":c, "nick":nicknames[c]})
+                    send(res_cont)
+            elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[end] = pacote["msg"]
-                if not end in contatos:
-                    contatos.append(end)
+                nicknames[end] = pacote["nick"]
+                if not pacote["msg"] in contatos:
+                    contatos.append(pacote["msg"])
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
             elif pacote["tag"] == "MSG_TAG":
