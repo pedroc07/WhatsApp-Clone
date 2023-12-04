@@ -34,6 +34,8 @@ def receive():
                 if not end in contatos:
                     contatos.append(end)
                 else:
+                    # COMPARTILHA O HISTÓRICO DE MENSAGENS COM O NOVO MEMBRO DO CHAT
+                    # ENVIANDO UMA POR UMA
                     for m in mensagens:
                         res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
                         send(res_historico)
@@ -41,9 +43,11 @@ def receive():
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for m in mensagens:
                     print(mensagens[m])
+                # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
                 res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":(endereco, int(port)), "nick":nick})
                 send(res_cont)
+                # ENVIA TODOS OS CONTATOS E APELIDOS QUE TEM REGISTRADO PARA O NOVO MEMBRO
                 for c in contatos:
                     id = uuid.uuid1()
                     res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":c, "nick":nicknames[c]})
@@ -61,6 +65,8 @@ def receive():
                     relogio_logico[0] = int(pacote["t"])
                     mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
                 elif relogio_logico[0] == int(pacote["t"]):
+                    # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
+                    # ELAS SÃO ORDENADAS ATRAVÉS DO ID
                     ultima_msg = mensagens.keys()[-1]
                     if ultima_msg > int(pacote["id"]):
                         relogio_logico[0] += 1
@@ -70,10 +76,10 @@ def receive():
                         re.sub(str(relogio_logico), "", mensagens[ultima_msg])
                         relogio_logico[0] += 1
                         mensagens[ultima_msg] = (f"{relogio_logico}{mensagens[ultima_msg]}")
-                elif relogio_logico[0] > int(pacote["t"]):
+                '''elif relogio_logico[0] > int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     id = uuid.uuid1()
-                    mensagens[id] = "ERRO AO SINCRONIZAR MENSAGENS"
+                    mensagens[id] = "ERRO AO SINCRONIZAR MENSAGENS"'''
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for m in mensagens:
                     print(mensagens[m])
@@ -90,6 +96,8 @@ def send(msg):
 t1 = threading.Thread(target=receive)
 t1.start()
 
+# ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
+# ANUNCIANDO SUA ENTRADA
 id = uuid.uuid1()
 res_entrou = json.dumps({"tag":"ENTROU_TAG", "t":0, "id":id.int, "msg":f"{nick}"})
 send(res_entrou)
