@@ -9,7 +9,7 @@ import os
 import re
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "127.0.0.1"
+endereco = "172.16.103.2"
 #port = input("Digite a porta: ")
 port = 8102
 #port2 = input("Digite a porta do destinatário: ")
@@ -46,6 +46,7 @@ def receive():
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
                 res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":(endereco, int(port)), "nick":nick})
+                mensagens[0] = nick
                 send(res_cont)
                 # ENVIA TODOS OS CONTATOS E APELIDOS QUE TEM REGISTRADO PARA O NOVO MEMBRO
                 for c in contatos:
@@ -55,7 +56,7 @@ def receive():
             elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[end] = pacote["nick"]
+                nicknames[pacote["msg"]] = pacote["nick"]
                 if not pacote["msg"] in contatos:
                     contatos.append(pacote["msg"])
             elif pacote["tag"] == "HISTORICO_TAG":
