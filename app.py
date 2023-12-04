@@ -46,7 +46,6 @@ def receive():
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
                 res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":(endereco, int(port)), "nick":nick})
-                mensagens[0] = nick
                 send(res_cont)
                 # ENVIA TODOS OS CONTATOS E APELIDOS QUE TEM REGISTRADO PARA O NOVO MEMBRO
                 for c in contatos:
