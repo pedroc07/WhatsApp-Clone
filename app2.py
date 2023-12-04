@@ -6,7 +6,7 @@ import os
 import re
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "127.0.0.1"
+endereco = "72.16.103.X"
 #port = input("Digite a porta: ")
 port = 8108
 #port2 = input("Digite a porta do destinatário: ")
@@ -15,7 +15,7 @@ port2 = 8102
 nick = "Trotsky"
 server.bind((endereco, int(port)))
 
-contatos = [("127.0.0.1", int(port2))]
+contatos = [("172.16.103.2", int(port2))]
 nicknames = {}
 relogio_logico = [0]
 mensagens = {}
