@@ -18,6 +18,7 @@ port2 = 8108
 nick = "Bonaparte"
 server.bind((endereco, int(port)))
 
+
 contatos = []
 nicknames = {}
 relogio_logico = [0]
@@ -72,6 +73,9 @@ def receive():
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    for m in mensagens:
+                        print(mensagens[m])
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
                     # ELAS SÃO ORDENADAS ATRAVÉS DO ID
@@ -88,9 +92,6 @@ def receive():
                     relogio_logico[0] = int(pacote["t"])
                     id = uuid.uuid1()
                     mensagens[id] = "ERRO AO SINCRONIZAR MENSAGENS"'''
-                os.system('cls' if os.name == 'nt' else 'clear')
-                for m in mensagens:
-                    print(mensagens[m])
         except:
             pass
 
