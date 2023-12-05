@@ -6,13 +6,13 @@ import os
 import re
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "172.16.103.X"
+endereco = "172.16.103.1"
 #port = input("Digite a porta: ")
 port = 8108
 #port2 = input("Digite a porta do destinatário: ")
 port2 = 8102
 #nick = input("Digite seu nome: ")
-nick = "Trotsky"
+nick = "Zapata"
 server.bind((endereco, int(port)))
 
 contatos = [("172.16.103.2", int(port2))]
