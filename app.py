@@ -85,10 +85,9 @@ def receive():
                         re.sub(str(relogio_logico), "", mensagens[ultima_msg])
                         relogio_logico[0] += 1
                         mensagens[ultima_msg] = (f"{relogio_logico}{mensagens[ultima_msg]}")
-                '''elif relogio_logico[0] > int(pacote["t"]):
-                    relogio_logico[0] = int(pacote["t"])
-                    id = uuid.uuid1()
-                    mensagens[id] = "ERRO AO SINCRONIZAR MENSAGENS"'''
+                elif relogio_logico[0] > int(pacote["t"]):
+                    relogio_logico[0] += 1
+                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for m in mensagens:
                     print(mensagens[m])
