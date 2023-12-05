@@ -1,7 +1,3 @@
-'''id = uuid.uuid1()
-                res_novo = json.dumps({"tag":"NOVO_TAG", "t":0, "id":id.int, "msg":end, "nick":pacote["msg"]})
-                send(res_novo)
-                nicknames[end] = pacote["msg"]'''
 # ver criptogrfia
 # testar em mais maquinas
 
@@ -34,11 +30,15 @@ def receive():
             p = data.decode('utf-8')
             pacote = json.loads(p)
             if pacote["tag"] == "ENTROU_TAG":
+                # ENVIA O CONTATO DO NOVO MEMBRO PARA OS MEMBROS ANTIGOS
+                id = uuid.uuid1()
+                res_novo = json.dumps({"tag":"NOVO_TAG", "t":0, "id":id.int, "msg":end, "nick":pacote["msg"]})
+                send(res_novo)
                 nicknames[end] = pacote["msg"]
                 if not end in contatos:
                     contatos.append(end)
                 else:
-                    # COMPARTILHA O HISTÓRICO DE MENSAGENS COM O NOVO MEMBRO DO CHAT
+                    # COMPARTILHA O HISTÓRICO DE MENSAGENS COM O MEMBRO DO CHAT QUE RETORNOU
                     # ENVIANDO UMA POR UMA
                     for m in mensagens:
                         res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
@@ -63,6 +63,10 @@ def receive():
                 nicknames[n] = pacote["nick"]
                 if not n in contatos:
                     contatos.append(n)
+            elif pacote["tag"] == "NOVO_TAG":
+                nicknames[pacote["msg"]] = pacote["nick"]
+                if (not pacote["msg"] in contatos) and pacote["msg"] != endereco:
+                    contatos.append(pacote["msg"])
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
             elif pacote["tag"] == "MSG_TAG":
