@@ -1,3 +1,7 @@
+'''id = uuid.uuid1()
+                res_novo = json.dumps({"tag":"NOVO_TAG", "t":0, "id":id.int, "msg":end, "nick":pacote["msg"]})
+                send(res_novo)
+                nicknames[end] = pacote["msg"]'''
 # ver criptogrfia
 # testar em mais maquinas
 
@@ -18,7 +22,6 @@ port2 = 8108
 nick = "Bonaparte"
 server.bind((endereco, int(port)))
 
-
 contatos = []
 nicknames = {}
 relogio_logico = [0]
@@ -31,11 +34,7 @@ def receive():
             p = data.decode('utf-8')
             pacote = json.loads(p)
             if pacote["tag"] == "ENTROU_TAG":
-                # ENVIA O CONTATO DO NOVO MEMBRO PARA OS MEMBROS ANTIGOS
-                '''id = uuid.uuid1()
-                res_novo = json.dumps({"tag":"NOVO_TAG", "t":0, "id":id.int, "msg":end, "nick":pacote["msg"]})
-                send(res_novo)
-                nicknames[end] = pacote["msg"]'''
+                nicknames[end] = pacote["msg"]
                 if not end in contatos:
                     contatos.append(end)
                 else:
@@ -60,12 +59,8 @@ def receive():
             elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[pacote["msg"]] = pacote["nick"]
+                nicknames[end] = pacote["nick"]
                 if not pacote["msg"] in contatos:
-                    contatos.append(pacote["msg"])
-            elif pacote["tag"] == "NOVO_TAG":
-                nicknames[pacote["msg"]] = pacote["nick"]
-                if (not pacote["msg"] in contatos) and pacote["msg"] != endereco:
                     contatos.append(pacote["msg"])
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
@@ -73,9 +68,6 @@ def receive():
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
-                    os.system('cls' if os.name == 'nt' else 'clear')
-                    for m in mensagens:
-                        print(mensagens[m])
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
                     # ELAS SÃO ORDENADAS ATRAVÉS DO ID
@@ -92,6 +84,9 @@ def receive():
                     relogio_logico[0] = int(pacote["t"])
                     id = uuid.uuid1()
                     mensagens[id] = "ERRO AO SINCRONIZAR MENSAGENS"'''
+                os.system('cls' if os.name == 'nt' else 'clear')
+                for m in mensagens:
+                    print(mensagens[m])
         except:
             pass
 

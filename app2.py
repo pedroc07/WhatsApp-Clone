@@ -27,11 +27,7 @@ def receive():
             p = data.decode('utf-8')
             pacote = json.loads(p)
             if pacote["tag"] == "ENTROU_TAG":
-                # ENVIA O CONTATO DO NOVO MEMBRO PARA OS MEMBROS ANTIGOS
-                '''id = uuid.uuid1()
-                res_novo = json.dumps({"tag":"NOVO_TAG", "t":0, "id":id.int, "msg":end, "nick":pacote["msg"]})
-                send(res_novo)
-                nicknames[end] = pacote["msg"]'''
+                nicknames[end] = pacote["msg"]
                 if not end in contatos:
                     contatos.append(end)
                 else:
@@ -56,12 +52,8 @@ def receive():
             elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[pacote["msg"]] = pacote["nick"]
+                nicknames[end] = pacote["nick"]
                 if not pacote["msg"] in contatos:
-                    contatos.append(pacote["msg"])
-            elif pacote["tag"] == "NOVO_TAG":
-                nicknames[pacote["msg"]] = pacote["nick"]
-                if (not pacote["msg"] in contatos) and pacote["msg"] != endereco:
                     contatos.append(pacote["msg"])
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
