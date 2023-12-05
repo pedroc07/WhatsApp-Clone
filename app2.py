@@ -28,10 +28,10 @@ def receive():
             pacote = json.loads(p)
             if pacote["tag"] == "ENTROU_TAG":
                 # ENVIA O CONTATO DO NOVO MEMBRO PARA OS MEMBROS ANTIGOS
-                id = uuid.uuid1()
+                '''id = uuid.uuid1()
                 res_novo = json.dumps({"tag":"NOVO_TAG", "t":0, "id":id.int, "msg":end, "nick":pacote["msg"]})
                 send(res_novo)
-                nicknames[end] = pacote["msg"]
+                nicknames[end] = pacote["msg"]'''
                 if not end in contatos:
                     contatos.append(end)
                 else:
