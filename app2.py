@@ -42,19 +42,20 @@ def receive():
                     print(mensagens[m])
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
-                res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":(endereco, int(port)), "nick":nick})
+                res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":[endereco, int(port)], "nick":nick})
                 send(res_cont)
                 # ENVIA TODOS OS CONTATOS E APELIDOS QUE TEM REGISTRADO PARA O NOVO MEMBRO
                 for c in contatos:
                     id = uuid.uuid1()
-                    res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":c, "nick":nicknames[c]})
+                    res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":[c[0], c[1]], "nick":nicknames[c]})
                     send(res_cont)
             elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
-                nicknames[pacote["msg"]] = pacote["nick"]
-                if not pacote["msg"] in contatos:
-                    contatos.append(pacote["msg"])
+                n = (pacote["msg"][0], pacote["msg"][1])
+                nicknames[n] = pacote["nick"]
+                if not n in contatos:
+                    contatos.append(n)
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
             elif pacote["tag"] == "MSG_TAG":
