@@ -1,15 +1,19 @@
-# ver criptogrfia
-# testar em mais maquinas
-
 import threading
 import socket
 import uuid
 import json
 import os
 import re
+from cryptography.fernet import Fernet
+
+with open('key.json', 'r') as arq:
+    k = json.load(arq)
+
+key = k.encode()
+cipher_suite = Fernet(key)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "172.16.103.2"
+endereco = "172.16.103.3"
 #port = input("Digite a porta: ")
 port = 8102
 #port2 = input("Digite a porta do destinatário: ")
@@ -72,7 +76,7 @@ def receive():
             elif pacote["tag"] == "MSG_TAG":
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {cipher_suite.decrypt(pacote['msg'])}")
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
                     # ELAS SÃO ORDENADAS ATRAVÉS DO ID
@@ -115,7 +119,7 @@ while not sair_chat:
     msg = input()
     relogio_logico[0] += 1
     id = uuid.uuid1()
-    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg})
+    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":cipher_suite.encrypt(msg)})
     mensagens[id.int] = (f"{relogio_logico}{nick}: {msg}")
     os.system('cls' if os.name == 'nt' else 'clear')
     for m in mensagens:
