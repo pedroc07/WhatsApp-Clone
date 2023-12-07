@@ -1,3 +1,5 @@
+# implementar timeout e confirmação de mensagens
+
 import threading
 import socket
 import uuid
@@ -7,26 +9,30 @@ import re
 from cryptography.fernet import Fernet
 import base64
 
-with open('key.json', 'r') as arq:
-    k = json.load(arq)
-
-key = k.encode()
-cipher_suite = Fernet(key)
-
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "172.16.103.2"
-#port = input("Digite a porta: ")
+endereco = "172.16.103.1"
 port = 8102
-#port2 = input("Digite a porta do destinatário: ")
-port2 = 8108
+abrir_chat = int(input("Serviço de mensagens[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
+if abrir_chat == 1:
+    port2 = input("Digite a porta do destinatário: ")
+    end2 = input("Digite o endereco do destinatário: ")
+    k = input("Digite a senha do chat: ")
+    key = k.encode()
+    contatos = [(end2, int(port2))]
+elif abrir_chat == 2:
+    key = Fernet.generate_key()
+    contatos = []
+
 #nick = input("Digite seu nome: ")
 nick = "Bonaparte"
+cipher_suite = Fernet(key)
 server.bind((endereco, int(port)))
 
-contatos = []
 nicknames = {}
 relogio_logico = [0]
 mensagens = {}
+
+
 
 def receive():
     while True:

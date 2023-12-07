@@ -7,23 +7,25 @@ import re
 from cryptography.fernet import Fernet
 import base64
 
-with open('key.json', 'r') as arq:
-    k = json.load(arq)
-
-key = k.encode()
-cipher_suite = Fernet(key)
-
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "172.16.103.1"
-#port = input("Digite a porta: ")
-port = 8108
-#port2 = input("Digite a porta do destinatário: ")
-port2 = 8102
+endereco = "172.16.103.2"
+port = 8102
+abrir_chat = int(input("Serviço de mensagens[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
+if abrir_chat == 1:
+    port2 = input("Digite a porta do destinatário: ")
+    end2 = input("Digite o endereco do destinatário: ")
+    k = input("Digite a senha do chat: ")
+    key = k.encode()
+    contatos = [(end2, int(port2))]
+elif abrir_chat == 2:
+    key = Fernet.generate_key()
+    contatos = []
+
 #nick = input("Digite seu nome: ")
 nick = "Zapata"
+cipher_suite = Fernet(key)
 server.bind((endereco, int(port)))
 
-contatos = [("172.16.103.2", int(port2))]
 nicknames = {}
 relogio_logico = [0]
 mensagens = {}
