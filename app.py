@@ -77,7 +77,7 @@ def receive():
             elif pacote["tag"] == "MSG_TAG":
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                    msg_decrypto = base64.b64decode(cipher_suite.decrypt(pacote['msg']))
+                    msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                     mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {msg_decrypto}")
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
@@ -121,8 +121,8 @@ while not sair_chat:
     msg = input()
     relogio_logico[0] += 1
     id = uuid.uuid1()
-    msg_crypto = base64.b64encode(cipher_suite.encrypt(msg.encode()))
-    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto})
+    msg_crypto = cipher_suite.encrypt(msg.encode())
+    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = (f"{relogio_logico}{nick}: {msg}")
     os.system('cls' if os.name == 'nt' else 'clear')
     for m in mensagens:
