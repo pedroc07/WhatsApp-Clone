@@ -78,7 +78,7 @@ def receive():
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
-                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {msg_decrypto}")
+                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {msg_decrypto.decode('utf-8')}")
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
                     # ELAS SÃO ORDENADAS ATRAVÉS DO ID
