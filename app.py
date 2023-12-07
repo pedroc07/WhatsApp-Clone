@@ -76,9 +76,7 @@ def receive():
             elif pacote["tag"] == "MSG_TAG":
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                    msg_cripto = pacote['msg'].decode('utf-8')
-                    msg = cipher_suite.decrypt(msg_cripto)
-                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {msg}")
+                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {cipher_suite.decrypt(pacote['msg'][0])}")
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
                     # ELAS SÃO ORDENADAS ATRAVÉS DO ID
@@ -121,9 +119,7 @@ while not sair_chat:
     msg = input()
     relogio_logico[0] += 1
     id = uuid.uuid1()
-    msg_cripto = cipher_suite.encrypt(msg.encode())
-    msg_cripto_str = msg_cripto.encode('utf-8')
-    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":cipher_suite.encrypt(msg_cripto_str)})
+    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":[cipher_suite.encrypt(msg.encode())]})
     mensagens[id.int] = (f"{relogio_logico}{nick}: {msg}")
     os.system('cls' if os.name == 'nt' else 'clear')
     for m in mensagens:
