@@ -7,7 +7,6 @@ import json
 import os
 import re
 from cryptography.fernet import Fernet
-import secrets
 from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
