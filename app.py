@@ -25,7 +25,6 @@ load_dotenv()
 
 k = os.getenv("key")
 key = k.encode()
-print(k)
 #nick = input("Digite seu nome: ")
 nick = "Bonaparte"
 cipher_suite = Fernet(key)
