@@ -7,7 +7,8 @@ import json
 import os
 import re
 from cryptography.fernet import Fernet
-import base64
+import secrets
+from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = "172.16.103.1"
@@ -20,9 +21,11 @@ if abrir_chat == 1:
 elif abrir_chat == 2:
     contatos = []
 
-with open('produtos.json', 'r') as arq:
-        k = json.load(arq)
+load_dotenv()
+
+k = os.getenv("key")
 key = k.encode()
+print(k)
 #nick = input("Digite seu nome: ")
 nick = "Bonaparte"
 cipher_suite = Fernet(key)
