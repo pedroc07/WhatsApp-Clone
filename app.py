@@ -6,11 +6,12 @@ import uuid
 import json
 import os
 import re
+import time
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "172.16.103.1"
+endereco = "172.16.103.3"
 port = 8102
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
 if abrir_chat == 1:
@@ -112,8 +113,16 @@ def send(msg):
         except:
             contatos.remove(cliente)
 
+def conta(cont):
+    while cont < 60:
+        cont += 1
+        time.sleep(1)
+
 t1 = threading.Thread(target=receive)
 t1.start()
+
+cont = 0
+t2 = threading.Thread(target=conta, args=(cont, id.int))
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
