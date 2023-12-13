@@ -36,7 +36,9 @@ server.bind((endereco, int(port)))
 
 nicknames = {}
 relogio_logico = [0]
-mensagens = {m}
+mensagens = {}
+id = uuid.uuid1()
+mensagens[id.int] = m
 
 def ordena_msg(mensagens):
     l=len(mensagens)
