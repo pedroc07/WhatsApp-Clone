@@ -98,6 +98,7 @@ def receive():
                     contatos.append(pacote["msg"])
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
+                relogio_logico[0] = pacote["msg"][0]
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] < int(pacote["t"]):
