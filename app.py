@@ -35,7 +35,6 @@ nicknames = {}
 relogio_logico = [0]
 mensagens = {}
 id = uuid.uuid1()
-mensagens[id.int] = m
 
 def ordena_msg(mensagens):
     l=len(mensagens)
@@ -45,6 +44,7 @@ def ordena_msg(mensagens):
                 t=mensagens[i]
                 mensagens[i]=mensagens[j]
                 mensagens[j]=t
+    return mensagens
 
 def receive():
     while True:
@@ -67,8 +67,7 @@ def receive():
                     send(res_historico)
                 mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
                 os.system('cls' if os.name == 'nt' else 'clear')
-                for m in mensagens:
-                    print(mensagens[m])
+                print(ordena_msg(mensagens.values()))
                 del(mensagens[pacote["id"]])
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
@@ -117,8 +116,8 @@ def receive():
                     relogio_logico[0] += 1
                     mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
                 os.system('cls' if os.name == 'nt' else 'clear')
-                for m in mensagens:
-                    print(mensagens[m])
+                print(ordena_msg(mensagens.values()))
+
         except:
             pass
 
@@ -158,8 +157,7 @@ while not sair_chat:
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = (f"{relogio_logico}{nick}: {msg}")
     os.system('cls' if os.name == 'nt' else 'clear')
-    for m in mensagens:
-        print(mensagens[m])
+    print(ordena_msg(mensagens.values()))
     if msg == "!q":
         sair_chat = True
     else:
