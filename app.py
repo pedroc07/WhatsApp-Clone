@@ -65,7 +65,7 @@ def receive():
                 for m in mensagens:
                     res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
                     send(res_historico)
-                mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
+                mensagens[pacote["id"]] = [relogio_logico[0]+1, f"Abre alas. {nicknames[end]} entrou na conversa!"]
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(ordena_msg(mensagens.values()))
                 del(mensagens[pacote["id"]])
@@ -99,22 +99,21 @@ def receive():
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
-                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {msg_decrypto.decode('utf-8')}")
+                    mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
                     # ELAS SÃO ORDENADAS ATRAVÉS DO ID
                     ultima_msg = mensagens.keys()[-1]
                     if ultima_msg > int(pacote["id"]):
                         relogio_logico[0] += 1
-                        mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                        mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {pacote['msg']}"]
                     else:
-                        mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
-                        re.sub(str(relogio_logico), "", mensagens[ultima_msg])
+                        mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {pacote['msg']}"]
                         relogio_logico[0] += 1
-                        mensagens[ultima_msg] = (f"{relogio_logico}{mensagens[ultima_msg]}")
+                        mensagens[ultima_msg][0] = relogio_logico[0]
                 elif relogio_logico[0] > int(pacote["t"]):
                     relogio_logico[0] += 1
-                    mensagens[pacote["id"]] = (f"{relogio_logico}{nicknames[end]}: {pacote['msg']}")
+                    mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {pacote['msg']}"]
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(ordena_msg(mensagens.values()))
 
