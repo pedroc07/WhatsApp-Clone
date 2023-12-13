@@ -54,6 +54,7 @@ def receive():
                         send(res_historico)
                 mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
                 os.system('cls' if os.name == 'nt' else 'clear')
+                del(mensagens[pacote["id"]])
                 for m in mensagens:
                     print(mensagens[m])
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
@@ -116,7 +117,7 @@ def send(msg):
             contatos.remove(cliente)
 
 def conta(cont):
-    while cont < 30:
+    while cont < 180:
         cont += 1
         time.sleep(1)
     id = uuid.uuid1()
