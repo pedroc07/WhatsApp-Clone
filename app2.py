@@ -9,7 +9,7 @@ import os
 import re
 import time
 from cryptography.fernet import Fernet
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = "172.16.103.2"
@@ -22,9 +22,9 @@ if abrir_chat == 1:
 elif abrir_chat == 2:
     contatos = []
 
-#load_dotenv()
+load_dotenv()
 
-k = '2cTg3PiAUzDTANGmlWM8qjpaGu2_E_h6ZLpvWr09gbE='
+k = os.getenv("key")
 key = k.encode()
 #nick = input("Digite seu nome: ")
 nick = "Trotsky"
