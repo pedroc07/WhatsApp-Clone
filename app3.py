@@ -4,6 +4,7 @@ import uuid
 import json
 import os
 import re
+import time
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 
@@ -23,7 +24,7 @@ load_dotenv()
 k = os.getenv("key")
 key = k.encode()
 #nick = input("Digite seu nome: ")
-nick = "Bonaparte"
+nick = "Zapata"
 cipher_suite = Fernet(key)
 server.bind((endereco, int(port)))
 
@@ -64,6 +65,10 @@ def receive():
                     id = uuid.uuid1()
                     res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":[c[0], c[1]], "nick":nicknames[c]})
                     send(res_cont)
+            elif pacote["tag"] == "SYNC_TAG":
+                for m in mensagens:
+                    res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
+                    send(res_historico)
             elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
@@ -110,8 +115,18 @@ def send(msg):
         except:
             contatos.remove(cliente)
 
+def conta(cont):
+    while cont < 180:
+        cont += 1
+        time.sleep(1)
+    res_sync = json.dumps({"tag":"SYNC_TAG", "t":0, "id":m, "msg":""})
+    send(res_sync)
+
 t1 = threading.Thread(target=receive)
 t1.start()
+
+cont = 0
+t2 = threading.Thread(target=conta, args=(cont, id.int))
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA

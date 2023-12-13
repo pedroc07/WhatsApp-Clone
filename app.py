@@ -1,4 +1,4 @@
-# implementar timeout e confirmação de mensagens
+# thread de contagem e sincronização
 
 import threading
 import socket
@@ -11,7 +11,7 @@ from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = "172.16.103.3"
+endereco = "172.16.103.1"
 port = 8102
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
 if abrir_chat == 1:
@@ -67,6 +67,10 @@ def receive():
                     id = uuid.uuid1()
                     res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":[c[0], c[1]], "nick":nicknames[c]})
                     send(res_cont)
+            elif pacote["tag"] == "SYNC_TAG":
+                for m in mensagens:
+                    res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
+                    send(res_historico)
             elif pacote["tag"] == "CONTATO_TAG":
                 # ATUALIZA O USUÁRIO RECÉM CHEGADO COM OS NOMES
                 # E ENDEREÇOS DOS USUÁRIOS ANTIGOS
@@ -114,9 +118,11 @@ def send(msg):
             contatos.remove(cliente)
 
 def conta(cont):
-    while cont < 60:
+    while cont < 180:
         cont += 1
         time.sleep(1)
+    res_sync = json.dumps({"tag":"SYNC_TAG", "t":0, "id":m, "msg":""})
+    send(res_sync)
 
 t1 = threading.Thread(target=receive)
 t1.start()
