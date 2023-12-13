@@ -99,9 +99,9 @@ def receive():
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
             elif pacote["tag"] == "MSG_TAG":
+                msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
-                    msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
                 elif relogio_logico[0] == int(pacote["t"]):
                     # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
