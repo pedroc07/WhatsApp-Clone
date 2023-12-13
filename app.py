@@ -128,7 +128,7 @@ t1 = threading.Thread(target=receive)
 t1.start()
 
 cont = 0
-t2 = threading.Thread(target=conta, args=(cont, id.int))
+t2 = threading.Thread(target=conta, args=(cont))
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
