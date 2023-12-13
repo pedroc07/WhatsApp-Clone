@@ -23,8 +23,8 @@ if abrir_chat == 1:
 elif abrir_chat == 2:
     contatos = []
     ult_digitos = port%100
-    m = f"Bem vindo ao seu chat de mensagens! Seu código de confirmação é {ult_digitos}, compartilhe-o e compartilhe seu IP
-           para que seus amigos possam se juntar ao chat!"
+    m = (f"Bem vindo ao seu chat de mensagens! Seu código de confirmação é {ult_digitos}, compartilhe-o e compartilhe seu IP
+           para que seus amigos possam se juntar ao chat!")
 
 load_dotenv()
 
