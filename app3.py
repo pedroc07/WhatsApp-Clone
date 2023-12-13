@@ -38,6 +38,7 @@ mensagens = {}
 id = uuid.uuid1()
 
 def ordena_msg(mensagens):
+    mensagens = list(mensagens)
     l=len(mensagens)
     for i in range(l-1):
         for j in range(i+1,l):
