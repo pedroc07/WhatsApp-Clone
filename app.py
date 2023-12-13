@@ -118,17 +118,18 @@ def send(msg):
             contatos.remove(cliente)
 
 def conta(cont):
-    while cont < 180:
+    while cont < 30:
         cont += 1
         time.sleep(1)
-    res_sync = json.dumps({"tag":"SYNC_TAG", "t":0, "id":m, "msg":""})
+    id = uuid.uuid1()
+    res_sync = json.dumps({"tag":"SYNC_TAG", "t":0, "id":id.int, "msg":""})
     send(res_sync)
 
 t1 = threading.Thread(target=receive)
 t1.start()
 
-cont = 0
-t2 = threading.Thread(target=conta, args=(cont))
+t2 = threading.Thread(target=conta, args=([0]))
+t2.start()
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
