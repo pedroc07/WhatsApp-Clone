@@ -1,5 +1,3 @@
-# thread de contagem e sincronização
-
 import threading
 import socket
 import uuid
