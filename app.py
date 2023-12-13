@@ -19,16 +19,13 @@ if abrir_chat == 1:
     port2 = input("Digite a porta do destinatário: ")
     end2 = input("Digite o endereco do destinatário: ")
     contatos = [(end2, int(port2))]
-    ult_digitos = int(input("Digite o código de confirmação: "))
 elif abrir_chat == 2:
     contatos = []
-    ult_digitos = port%100
-    m = f"Bem vindo ao seu chat de mensagens! Seu código de confirmação é {ult_digitos}, compartilhe-o e compartilhe seu IP para que seus amigos possam se juntar ao chat!"
 
 load_dotenv()
 
 k = os.getenv("key")
-key = k[ult_digitos]
+key = k.encode()
 #nick = input("Digite seu nome: ")
 nick = "Bonaparte"
 cipher_suite = Fernet(key)
