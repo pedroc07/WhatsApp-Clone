@@ -1,6 +1,3 @@
-# FAZER ALGORITMO DE ORDENAÇÃO DE MENSAGENS
-# TESTAR CONEXÃO 'INTERMEDIARIA'
-
 import threading
 import socket
 import uuid
@@ -26,8 +23,7 @@ load_dotenv()
 
 k = os.getenv("key")
 key = k.encode()
-#nick = input("Digite seu nome: ")
-nick = "Bonaparte"
+nick = input("Digite seu nome: ")
 cipher_suite = Fernet(key)
 server.bind((endereco, int(port)))
 
