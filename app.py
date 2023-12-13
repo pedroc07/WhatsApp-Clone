@@ -1,3 +1,5 @@
+# FAZER ALGORITMO DE ORDENAÇÃO DE MENSAGENS
+
 import threading
 import socket
 import uuid
@@ -54,9 +56,9 @@ def receive():
                         send(res_historico)
                 mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
                 os.system('cls' if os.name == 'nt' else 'clear')
-                del(mensagens[pacote["id"]])
                 for m in mensagens:
                     print(mensagens[m])
+                del(mensagens[pacote["id"]])
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
                 res_cont = json.dumps({"tag":"CONTATO_TAG", "t":0, "id":id.int, "msg":[endereco, int(port)], "nick":nick})
