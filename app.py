@@ -1,4 +1,5 @@
 # FAZER ALGORITMO DE ORDENAÇÃO DE MENSAGENS
+# TESTAR CONEXÃO 'INTERMEDIARIA'
 
 import threading
 import socket
@@ -18,13 +19,17 @@ if abrir_chat == 1:
     port2 = input("Digite a porta do destinatário: ")
     end2 = input("Digite o endereco do destinatário: ")
     contatos = [(end2, int(port2))]
+    ult_digitos = int(input("Digite o código de confirmação: "))
 elif abrir_chat == 2:
     contatos = []
+    ult_digitos = port%100
+    m = f"Bem vindo ao seu chat de mensagens! Seu código de confirmação é {ult_digitos}, compartilhe-o e compartilhe seu IP
+           para que seus amigos possam se juntar ao chat!"
 
 load_dotenv()
 
 k = os.getenv("key")
-key = k.encode()
+key = k[ult_digitos]
 #nick = input("Digite seu nome: ")
 nick = "Bonaparte"
 cipher_suite = Fernet(key)
@@ -32,7 +37,16 @@ server.bind((endereco, int(port)))
 
 nicknames = {}
 relogio_logico = [0]
-mensagens = {}
+mensagens = {m}
+
+def ordena_msg(mensagens):
+    l=len(mensagens)
+    for i in range(l-1):
+        for j in range(i+1,l):
+            if mensagens[i][0]>mensagens[j][0]:
+                t=mensagens[i]
+                mensagens[i]=mensagens[j]
+                mensagens[j]=t
 
 def receive():
     while True:
@@ -48,12 +62,11 @@ def receive():
                 nicknames[end] = pacote["msg"]
                 if not end in contatos:
                     contatos.append(end)
-                else:
-                    # COMPARTILHA O HISTÓRICO DE MENSAGENS COM O MEMBRO DO CHAT QUE RETORNOU
-                    # ENVIANDO UMA POR UMA
-                    for m in mensagens:
-                        res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
-                        send(res_historico)
+                # COMPARTILHA O HISTÓRICO DE MENSAGENS COM O MEMBRO DO CHAT QUE RETORNOU OU ACABA DE ENTRAR
+                # ENVIANDO UMA POR UMA
+                for m in mensagens:
+                    res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
+                    send(res_historico)
                 mensagens[pacote["id"]] = (f"Abre alas. {nicknames[end]} entrou na conversa!")
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for m in mensagens:
