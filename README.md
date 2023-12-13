@@ -7,5 +7,6 @@ Aplicativos modernos de troca de mensagens são ferramentas fundamentais para o 
 Fundamentação Teórica
 
 Metodologia
+
 O desenvolvimento da atividade iniciou-se com a criação de um sistema descentralizado de conversa entre diferentes usuários, após feita essa parte, foi implementado um relógio lógico de Lamport para sincronização e ordenação das mensagens enviadas.
-A execução do algoritmo funciona da seguinte forma: cada máquina possui seu próprio relógio lógico, que é implementado a cada envio de mensagem
+A execução do algoritmo funciona da seguinte forma: cada máquina possui seu próprio relógio lógico, que é implementado a cada envio de mensagem e é compartilhado no pacote da mensagem, de forma que o destinatário ao receber uma mensagem com o tempo lógico maior que o do seu relógio, atualiza o relógio para que assim todas as máquinas estejam sincronizadas.
