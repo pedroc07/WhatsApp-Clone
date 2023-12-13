@@ -156,7 +156,7 @@ while not sair_chat:
     id = uuid.uuid1()
     msg_crypto = cipher_suite.encrypt(msg.encode())
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
-    mensagens[id.int] = [relogio_logico[0], "f{nick}: {msg}"]
+    mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
     os.system('cls' if os.name == 'nt' else 'clear')
     print(ordena_msg(mensagens.values()))
     if msg == "!q":
