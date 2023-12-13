@@ -21,7 +21,6 @@ if abrir_chat == 1:
     contatos = [(end2, int(port2))]
 elif abrir_chat == 2:
     contatos = []
-    ult_digitos = port%100
 
 load_dotenv()
 
@@ -48,6 +47,7 @@ def ordena_msg(mensagens):
                 mensagens[j]=t
     return mensagens
 
+
 def receive():
     while True:
         try:
@@ -69,7 +69,9 @@ def receive():
                     send(res_historico)
                 mensagens[pacote["id"]] = [relogio_logico[0]+1, f"Abre alas. {nicknames[end]} entrou na conversa!"]
                 os.system('cls' if os.name == 'nt' else 'clear')
-                print(ordena_msg(mensagens.values()))
+                ord_mensagens = ordena_msg(mensagens.values())
+                for m in ord_mensagens:
+                    print(f"[{m[0]}]{m[1]}")
                 del(mensagens[pacote["id"]])
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
@@ -117,7 +119,9 @@ def receive():
                     relogio_logico[0] += 1
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {pacote['msg']}"]
                 os.system('cls' if os.name == 'nt' else 'clear')
-                print(ordena_msg(mensagens.values()))
+                ord_mensagens = ordena_msg(mensagens.values())
+                for m in ord_mensagens:
+                    print(f"[{m[0]}]{m[1]}")
 
         except:
             pass
@@ -158,7 +162,9 @@ while not sair_chat:
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(ordena_msg(mensagens.values()))
+    ord_mensagens = ordena_msg(mensagens.values())
+    for m in ord_mensagens:
+        print(f"[{m[0]}]{m[1]}")
     if msg == "!q":
         sair_chat = True
     else:

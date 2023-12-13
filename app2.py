@@ -1,5 +1,5 @@
-# FAZER ALGORITMO DE ORDENAÇÃO DE MENSAGENS
 # TESTAR CONEXÃO 'INTERMEDIARIA'
+# DOCKER
 
 import threading
 import socket
@@ -9,7 +9,7 @@ import os
 import re
 import time
 from cryptography.fernet import Fernet
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = "172.16.103.2"
@@ -22,9 +22,9 @@ if abrir_chat == 1:
 elif abrir_chat == 2:
     contatos = []
 
-load_dotenv()
+#load_dotenv()
 
-k = os.getenv("key")
+k = '2cTg3PiAUzDTANGmlWM8qjpaGu2_E_h6ZLpvWr09gbE='
 key = k.encode()
 #nick = input("Digite seu nome: ")
 nick = "Trotsky"
@@ -68,7 +68,9 @@ def receive():
                     send(res_historico)
                 mensagens[pacote["id"]] = [relogio_logico[0]+1, f"Abre alas. {nicknames[end]} entrou na conversa!"]
                 os.system('cls' if os.name == 'nt' else 'clear')
-                print(ordena_msg(mensagens.values()))
+                ord_mensagens = ordena_msg(mensagens.values())
+                for m in ord_mensagens:
+                    print(f"[{m[0]}]{m[1]}")
                 del(mensagens[pacote["id"]])
                 # ENVIA SEU CONTATO E APELIDO PARA O NOVO MEMBRO
                 id = uuid.uuid1()
@@ -116,7 +118,9 @@ def receive():
                     relogio_logico[0] += 1
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {pacote['msg']}"]
                 os.system('cls' if os.name == 'nt' else 'clear')
-                print(ordena_msg(mensagens.values()))
+                ord_mensagens = ordena_msg(mensagens.values())
+                for m in ord_mensagens:
+                    print(f"[{m[0]}]{m[1]}")
 
         except:
             pass
@@ -157,7 +161,9 @@ while not sair_chat:
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(ordena_msg(mensagens.values()))
+    ord_mensagens = ordena_msg(mensagens.values())
+    for m in ord_mensagens:
+        print(f"[{m[0]}]{m[1]}")
     if msg == "!q":
         sair_chat = True
     else:
