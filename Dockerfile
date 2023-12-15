@@ -8,4 +8,6 @@ COPY .env /zap/
 RUN pip install python-dotenv
 RUN pip install cryptography
 
+EXPOSE 8102
+
 CMD ["python", "app.py"]
