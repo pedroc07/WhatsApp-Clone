@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = socket.gethostbyname(socket.gethostname())
+print(endereco)
 port = 8102
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
 if abrir_chat == 1:
