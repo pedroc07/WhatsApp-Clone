@@ -1,5 +1,11 @@
-FROM python:3.7.9
+FROM python:3.8-slim
 
-RUN pip install dotenv
+WORKDIR /zap
 
-CMD ["python", "./app.py"]
+COPY app.py /zap/
+COPY .env /zap/
+
+RUN pip install python-dotenv
+RUN pip install cryptography
+
+CMD ["python", "app.py"]
