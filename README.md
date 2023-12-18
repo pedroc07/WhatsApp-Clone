@@ -17,6 +17,12 @@ O desenvolvimento da atividade iniciou-se com a criação de um sistema descentr
 Finalizada essa etapa, foi feita a criptografia, foi utilizada a biblioteca cryptography e seu módulo Fernet, que é um algoritmo de chave simétrica que utiliza chaves de 256 bits para criptografar e descriptografar cada mensagem enviada no chat. Para que não seja necessário o compartilhamento das chaves entre os usuários, assim comprometendo a segurança do aplicativo, cada versão do aplicativo possui a mesma chave depositada em um arquivo secreto .env que não é acessível ao usuário devido a execução do aplicativo através de um contâiner Dockerfile. Os pacotes trocados entre os usuários são do tipo json e são organizados da seguinte forma: o campo "tag" que é um identificador do tipo de pacote que está sendo enviado, podendo ser um pacote de entrada, de compartilhamento de histórico, de troca de contato, de pedido de sincronização e, de uma mensagem convencional.
 Também foi desenvolvido um sistema de sincronização de mensagens, de forma que quando um novo usuário se conecta no chat, um usuário antigo se reconecta após ficar offline ou um usuário qualquer após passado certo tempo, regulado por uma thread que opera uma contagem e faz a sincronização após 3 minutos
 
+### Resultados e Discussões
+
+O sistema foi desenvolvido conforme solicitado, seguindo a metodologia descrita na seção anterior e apresenta êxito em sua funcionalidade de envio e recebimento de mensagens entre os diferentes usuários da aplicação, além da execução sem falhas da criptografia e decriptografia das mensagens e resolver possíveis problemas de concorrência através do desempate do relógio de Lamport. O sistema foi testado de diversas formas, inicialmente em dois processos na mesma máquina e depois em duas e três máquinas. Uma questão que apareceu durante a resolução do problema foi a questão da confiabilidade, que foi parcialmente resolvida através da constante sincronizaçõ de mensagens entre os usuários, porém sua resolução completa e ideal se daria através da confirmação de recebimento de cada mensagem.
+
+### Conclusão
+
 ### Referências
 
 Lamport, L. (1978). Time, clocks, and the ordering of events in a distributed system. Communications of the ACM, pages 558–565.
