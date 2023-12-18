@@ -6,7 +6,10 @@ Aplicativos modernos de troca de mensagens são ferramentas fundamentais para o 
 
 Fundamentação Teórica
 
-Para resolver o problema foi feito o uso do algoritmo de relógio de Lamport, um tipo de relógio lógico, que não está associado ao tempo físico e que associa um número ou tempo a cada evento ocorrido dentro do sistema e os ordena de forma que se considerarmos o relógio como uma função C, para cada evento evento a e b, se a---> b, então C(a) > C(b).
+Para resolver o problema foi feito o uso do algoritmo de relógio de Lamport, um tipo de relógio lógico, que não está associado ao tempo físico e que associa um número ou tempo a cada evento ocorrido dentro do sistema e os ordena de forma que se considerarmos o relógio como uma função C, para cada evento evento a e b:
+1. C(a) ≠ C(b)
+2. Se a acontece antes de b no mesmo processo, então C(a) < C(b).
+3. Se a é o envio de uma mensagem e b, o seu recebimento, então C(a) < C(b).
 
 ### Metodologia
 
