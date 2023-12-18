@@ -23,7 +23,7 @@ O sistema foi desenvolvido conforme solicitado, seguindo a metodologia descrita 
 
 ### Conclusão
 
-
+Todo o processo de resolução do problema fluiu bem, e um sistema eficiente e descentralizado foi desenvolvido conforme solicitado, evidenciando a possibilidade de um sistema descentralizado de mensagens e a eficiência do algoritmo do relógio de Lamport para sistemas como esse.
 
 ### Referências
 
