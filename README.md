@@ -1,4 +1,4 @@
-## WhatsApp-Clone
+# WhatsApp-Clone
 
 # Introdução
 
