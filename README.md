@@ -2,7 +2,7 @@
 
 ### Introdução
 
-Aplicativos modernos de troca de mensagens são ferramentas fundamentais para o uso pessoal, acadêmico e profissional, com a evolução dos dispositivos móveis e do acesso à internet, tais tecnologias se desenvolveram de modo que além da troca de mensagens de texto, incluem: envio de arquivos de voz, texto, imagem e vídeo, chamadas de voz e de vídeo, canais de notícia, etc. O rápido desenvolvimento dessa tecnologia mudou a forma como nos comunicamos e hoje influencia vários aspectos de nossa vida como a forma que nos relacionamos uns com os outros, a forma como nos informamos, trabalhamos e agendamos serviços.
+Aplicativos modernos de troca de mensagens são ferramentas fundamentais para o uso pessoal, acadêmico e profissional, com a evolução dos dispositivos móveis e do acesso à internet, tais tecnologias se desenvolveram de modo que além da troca de mensagens de texto, incluem: envio de arquivos de voz, texto, imagem e vídeo, chamadas de voz e de vídeo, canais de notícia, etc. O rápido desenvolvimento dessa tecnologia mudou a forma como nos comunicamos e hoje influencia vários aspectos de nossa vida como a forma que nos relacionamos uns com os outros, nos informamos, trabalhamos e agendamos serviços.
 
 ### Fundamentação Teórica
 
