@@ -2,7 +2,7 @@
 
 ### Introdução
 
-Aplicativos modernos de troca de mensagens são ferramentas fundamentais para o uso pessoal, acadêmico e profissional, com a evolução dos dispositivos móveis e do acesso à internet, tais tecnologias se desenvolveram de modo que além da troca de mensagens de texto, incluem: envio de arquivos de voz, texto, imagem e vídeo, chamadas de voz e de vídeo, canais de notícia, etc. O rápido desenvolvimento dessa tecnologia mudou a forma como nos comunicamos e hoje influencia vários aspectos de nossa vida como relacionamentos, política e informação.
+Aplicativos modernos de troca de mensagens são ferramentas fundamentais para o uso pessoal, acadêmico e profissional, com a evolução dos dispositivos móveis e do acesso à internet, tais tecnologias se desenvolveram de modo que além da troca de mensagens de texto, incluem: envio de arquivos de voz, texto, imagem e vídeo, chamadas de voz e de vídeo, canais de notícia, etc. O rápido desenvolvimento dessa tecnologia mudou a forma como nos comunicamos e hoje influencia vários aspectos de nossa vida como a forma que nos relacionamos uns com os outros, a forma como nos informamos, trabalhamos e agendamos serviços.
 
 ### Fundamentação Teórica
 
@@ -22,6 +22,8 @@ Também foi desenvolvido um sistema de sincronização de mensagens, de forma qu
 O sistema foi desenvolvido conforme solicitado, seguindo a metodologia descrita na seção anterior e apresenta êxito em sua funcionalidade de envio e recebimento de mensagens entre os diferentes usuários da aplicação, além da execução sem falhas da criptografia e decriptografia das mensagens e resolver possíveis problemas de concorrência através do desempate do relógio de Lamport. O sistema foi testado de diversas formas, inicialmente em dois processos na mesma máquina e depois em duas e três máquinas. Uma questão que apareceu durante a resolução do problema foi a questão da confiabilidade, que foi parcialmente resolvida através da constante sincronizaçõ de mensagens entre os usuários, porém sua resolução completa e ideal se daria através da confirmação de recebimento de cada mensagem.
 
 ### Conclusão
+
+
 
 ### Referências
 
