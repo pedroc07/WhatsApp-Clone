@@ -23,7 +23,7 @@ O sistema foi desenvolvido conforme solicitado, seguindo a metodologia descrita 
 
 ### Conclusão
 
-Todo o processo de resolução do problema fluiu bem, e um sistema eficiente e descentralizado foi desenvolvido conforme solicitado, evidenciando a possibilidade de um sistema descentralizado de mensagens e a eficiência do algoritmo do relógio de Lamport para sistemas como esse.
+Todo o processo de resolução do problema fluiu bem, e um sistema eficiente e descentralizado foi desenvolvido conforme solicitado, evidenciando a possibilidade de um sistema descentralizado de troca de mensagens e também a eficiência do algoritmo do relógio de Lamport para sistemas como esse. Conclui-se que o projeto demonstrou com êxito o desenvolvimento de um software de mensagens instantâneas descentralizado com capacidade de atender ao mercado corporativo e baseado no modelo peer-to-peer (P2P).
 
 ### Referências
 
