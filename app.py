@@ -32,6 +32,7 @@ nicknames = {}
 relogio_logico = [0]
 mensagens = {}
 id = uuid.uuid1()
+buffer_env = []
 
 def ordena_msg(mensagens):
     mensagens = list(mensagens)
@@ -96,6 +97,20 @@ def receive():
             elif pacote["tag"] == "HISTORICO_TAG":
                 mensagens[pacote["id"]] = pacote["msg"]
                 relogio_logico[0] = pacote["msg"][0]
+            elif pacote["tag"] == "ID_TAG":
+                ids = []
+                possui_msg = True
+                for m in mensagens.keys():
+                    if m == pacote["id"]:
+                        possui_msg = False
+                        ids.append(m)
+                for i in ids:
+                    if not possui_msg:
+                        res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
+                    send(res_nack)
+            elif pacote["tag"] == "NACK_TAG":
+                res = json.dumps({"tag":"MSG_TAG", "t":mensagens[pacote["id"][0]], "id":id.int, "msg":mensagens[pacote["id"]]})
+                send(res)
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] < int(pacote["t"]):
