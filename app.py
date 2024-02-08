@@ -1,3 +1,5 @@
+# ENVIAR IDS PARA OS OUTROS NÓS
+
 import threading
 import socket
 import uuid
@@ -98,15 +100,12 @@ def receive():
                 mensagens[pacote["id"]] = pacote["msg"]
                 relogio_logico[0] = pacote["msg"][0]
             elif pacote["tag"] == "ID_TAG":
-                ids = []
-                possui_msg = True
+                ids = list(mensagens.keys())
                 for m in mensagens.keys():
                     if m == pacote["id"]:
-                        possui_msg = False
-                        ids.append(m)
+                        ids.remove(m)
                 for i in ids:
-                    if not possui_msg:
-                        res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
+                    res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
                 res = json.dumps({"tag":"MSG_TAG", "t":mensagens[pacote["id"][0]], "id":id.int, "msg":mensagens[pacote["id"]]})
