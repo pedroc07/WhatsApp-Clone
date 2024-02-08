@@ -1,4 +1,5 @@
-# ENVIAR IDS PARA OS OUTROS NÓS
+# FAZER FUNCIONAMENTO NO SHELL
+# POSSIVEIS PROBLEMAS DO ALGORITMO NACK
 
 import threading
 import socket
@@ -8,7 +9,7 @@ import os
 import re
 import time
 from cryptography.fernet import Fernet
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = socket.gethostbyname(socket.gethostname())
@@ -22,9 +23,9 @@ if abrir_chat == 1:
 elif abrir_chat == 2:
     contatos = []
 
-load_dotenv()
+#load_dotenv()
 
-k = os.getenv("key")
+k = "2cTg3PiAUzDTANGmlWM8qjpaGu2_E_h6ZLpvWr09gbE="
 key = k.encode()
 nick = input("Digite seu nome: ")
 cipher_suite = Fernet(key)
@@ -100,16 +101,19 @@ def receive():
                 mensagens[pacote["id"]] = pacote["msg"]
                 relogio_logico[0] = pacote["msg"][0]
             elif pacote["tag"] == "ID_TAG":
+                # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
                 ids = list(mensagens.keys())
                 for m in mensagens.keys():
-                    if m == pacote["id"]:
+                    if m == pacote["msg"]:
                         ids.remove(m)
                 for i in ids:
                     res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
-                res = json.dumps({"tag":"MSG_TAG", "t":mensagens[pacote["id"][0]], "id":id.int, "msg":mensagens[pacote["id"]]})
-                send(res)
+                # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
+                msg_crypto = cipher_suite.encrypt(mensagens[pacote["msg"]].encode())
+                res = json.dumps({"tag":"MSG_TAG", "t":mensagens[pacote["msg"][0]], "id":pacote["msg"], "msg":msg_crypto})
+                sendto(res, end)
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] < int(pacote["t"]):
@@ -133,7 +137,6 @@ def receive():
                 ord_mensagens = ordena_msg(mensagens.values())
                 for m in ord_mensagens:
                     print(f"[{m[0]}]{m[1]}")
-
         except:
             pass
 
@@ -144,18 +147,24 @@ def send(msg):
         except:
             contatos.remove(cliente)
 
-def conta(cont):
+def sendto(msg, receptor):
+    try:
+        server.sendto(msg.encode('utf-8'), receptor)
+    except:
+        contatos.remove(receptor)
+
+def envia_ids(cont):
     while cont < 180:
         cont += 1
         time.sleep(1)
-    id = uuid.uuid1()
-    res_sync = json.dumps({"tag":"SYNC_TAG", "t":0, "id":id.int, "msg":""})
-    send(res_sync)
+    for m in mensagens:
+        res = json.dumps({"tag":"ID_TAG", "msg":m})
+    send(res)
 
 t1 = threading.Thread(target=receive)
 t1.start()
 
-t2 = threading.Thread(target=conta, args=([0]))
+t2 = threading.Thread(target=envia_ids, args=([0]))
 t2.start()
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
