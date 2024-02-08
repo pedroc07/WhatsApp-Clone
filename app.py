@@ -1,5 +1,6 @@
 # FAZER FUNCIONAMENTO NO SHELL
-# POSSIVEIS PROBLEMAS DO ALGORITMO NACK
+# FAZER VERIFICACAO SE O NACK JA FOI MANDADO
+# BUFFER DE MENSAGENS
 
 import threading
 import socket
@@ -10,6 +11,7 @@ import re
 import time
 from cryptography.fernet import Fernet
 #from dotenv import load_dotenv
+import random
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endereco = socket.gethostbyname(socket.gethostname())
@@ -107,6 +109,8 @@ def receive():
                     if m == pacote["msg"]:
                         ids.remove(m)
                 for i in ids:
+                    tempo = random.randint(1, 100)
+                    time.sleep(tempo/100)
                     res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
