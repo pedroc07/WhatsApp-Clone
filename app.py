@@ -1,6 +1,5 @@
 # FAZER FUNCIONAMENTO NO SHELL
-# FAZER VERIFICACAO SE O NACK JA FOI MANDADO
-# BUFFER DE MENSAGENS
+# TESTAR
 
 import threading
 import socket
@@ -14,7 +13,8 @@ from cryptography.fernet import Fernet
 import random
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = socket.gethostbyname(socket.gethostname())
+#endereco = socket.gethostbyname(socket.gethostname())
+endereco = "192.168.0.103"
 port = 8102
 print(endereco, port)
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
@@ -37,7 +37,7 @@ nicknames = {}
 relogio_logico = [0]
 mensagens = {}
 id = uuid.uuid1()
-buffer_env = []
+buffer_env = {}
 
 def ordena_msg(mensagens):
     mensagens = list(mensagens)
@@ -104,13 +104,13 @@ def receive():
                 relogio_logico[0] = pacote["msg"][0]
             elif pacote["tag"] == "ID_TAG":
                 # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
-                ids = list(mensagens.keys())
-                for m in mensagens.keys():
+                ids = list(buffer_env.keys())
+                for m in buffer_env.keys():
                     if m == pacote["msg"]:
                         ids.remove(m)
+                if len(ids) == 0:
+                    buffer_env = {} 
                 for i in ids:
-                    tempo = random.randint(1, 100)
-                    time.sleep(tempo/100)
                     res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
@@ -158,7 +158,7 @@ def sendto(msg, receptor):
         contatos.remove(receptor)
 
 def envia_ids(cont):
-    while cont < 180:
+    while cont < 30:
         cont += 1
         time.sleep(1)
     for m in mensagens:
@@ -185,6 +185,7 @@ while not sair_chat:
     msg_crypto = cipher_suite.encrypt(msg.encode())
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
+    buffer_env[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
     os.system('cls' if os.name == 'nt' else 'clear')
     ord_mensagens = ordena_msg(mensagens.values())
     for m in ord_mensagens:
