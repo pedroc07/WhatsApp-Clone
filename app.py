@@ -99,7 +99,6 @@ def receive():
                 if not n in contatos:
                     contatos.append(n)
             elif pacote["tag"] == "NOVO_TAG":
-                print("Nome:", pacote["nick"])
                 nicknames[pacote["msg"]] = pacote["nick"]
                 if (not pacote["msg"] in contatos) and pacote["msg"] != endereco:
                     contatos.append(pacote["msg"])
