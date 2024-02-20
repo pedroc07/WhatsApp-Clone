@@ -18,7 +18,7 @@ endereco = socket.gethostbyname(socket.gethostname())
 #endereco = "192.168.0.103"
 port = 8102
 print(endereco, port)
-abrir_chat = int(input("Serviço de mensagens Whatsapp 2\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
+abrir_chat = int(input("Serviço de mensagens Whatsapp 2 Release Candidate\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
 if abrir_chat == 1:
     #port2 = input("Digite a porta do destinatário: ")
     port2 = 8102
