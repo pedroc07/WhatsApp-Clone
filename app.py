@@ -1,6 +1,7 @@
 # FAZER FUNCIONAMENTO NO SHELL
 # TESTAR
 
+import sys
 import threading
 import socket
 import uuid
@@ -13,15 +14,16 @@ from cryptography.fernet import Fernet
 import random
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#endereco = socket.gethostbyname(socket.gethostname())
-endereco = "192.168.0.103"
+endereco = socket.gethostbyname(socket.gethostname())
+#endereco = "192.168.0.103"
 port = 8102
 print(endereco, port)
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
 if abrir_chat == 1:
-    port2 = input("Digite a porta do destinatário: ")
-    end2 = input("Digite o endereco do destinatário: ")
-    contatos = [(end2, int(port2))]
+    #port2 = input("Digite a porta do destinatário: ")
+    port2 = 8102
+    #end2 = input("Digite o endereco do destinatário: ")
+    contatos = []
 elif abrir_chat == 2:
     contatos = []
 
@@ -181,6 +183,23 @@ t2.start()
 id = uuid.uuid1()
 res_entrou = json.dumps({"tag":"ENTROU_TAG", "t":0, "id":id.int, "msg":f"{nick}"})
 send(res_entrou)
+
+def envia(msg):
+    msg_crypto = cipher_suite.encrypt(msg.encode())
+    relogio_logico[0] += 1
+    id = uuid.uuid1()
+    res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
+    mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
+    buffer_env[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
+    send(res)
+
+def historico():
+    ord_mensagens = ordena_msg(mensagens.values())
+    for m in ord_mensagens:
+        print(f"[{m[0]}]{m[1]}")
+
+def sair():
+    sys.quit()
 
 sair_chat = False
 while not sair_chat:
