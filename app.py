@@ -153,9 +153,9 @@ def receive():
             connected = False
             while not connected:
                 try:
-                    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                    endereco = socket.gethostbyname(socket.gethostname())
-                    server.bind((endereco, int(port)))
+                    sv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    end = socket.gethostbyname(socket.gethostname())
+                    sv.bind((end, int(port)))
                     connected=True
                 except socket.error:
                     time.sleep(2)
