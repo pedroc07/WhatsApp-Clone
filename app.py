@@ -128,10 +128,10 @@ def receive():
                     print(f"[{m[0]}]{m[1]}")
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
-                if relogio_logico[0] < int(pacote["t"]):
+                if relogio_logico[0] <= int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
-                elif relogio_logico[0] >= int(pacote["t"]):
+                elif relogio_logico[0] > int(pacote["t"]):
                     relogio_logico[0] += 1
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
                 os.system('cls' if os.name == 'nt' else 'clear')
