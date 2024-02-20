@@ -99,6 +99,7 @@ def receive():
                 if not n in contatos:
                     contatos.append(n)
             elif pacote["tag"] == "NOVO_TAG":
+                print("Nome:", pacote["nick"])
                 nicknames[pacote["msg"]] = pacote["nick"]
                 if (not pacote["msg"] in contatos) and pacote["msg"] != endereco:
                     contatos.append(pacote["msg"])
@@ -128,10 +129,10 @@ def receive():
                     print(f"[{m[0]}]{m[1]}")
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
-                if relogio_logico[0] < int(pacote["t"]):
+                if relogio_logico[0] <= int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
-                elif relogio_logico[0] >= int(pacote["t"]):
+                elif relogio_logico[0] > int(pacote["t"]):
                     relogio_logico[0] += 1
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
                 os.system('cls' if os.name == 'nt' else 'clear')
@@ -163,7 +164,8 @@ def envia_ids(cont):
         time.sleep(1)
     for m in mensagens:
         res = json.dumps({"tag":"ID_TAG", "msg":m})
-    send(res)
+    if len(mensagens) > 0:
+        send(res)
 
 t1 = threading.Thread(target=receive)
 t1.start()
