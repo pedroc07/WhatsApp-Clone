@@ -131,18 +131,7 @@ def receive():
                 if relogio_logico[0] < int(pacote["t"]):
                     relogio_logico[0] = int(pacote["t"])
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
-                elif relogio_logico[0] == int(pacote["t"]):
-                    # CASO DUAS MENSAGENS TENHAM O MESMO TEMPO LÓGICO
-                    # ELAS SÃO ORDENADAS ATRAVÉS DO ID
-                    ultima_msg = mensagens.keys()[-1]
-                    if ultima_msg > int(pacote["id"]):
-                        relogio_logico[0] += 1
-                        mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
-                    else:
-                        mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
-                        relogio_logico[0] += 1
-                        mensagens[ultima_msg][0] = relogio_logico[0]
-                elif relogio_logico[0] > int(pacote["t"]):
+                elif relogio_logico[0] >= int(pacote["t"]):
                     relogio_logico[0] += 1
                     mensagens[pacote["id"]] = [relogio_logico[0], f"{nicknames[end]}: {msg_decrypto.decode('utf-8')}"]
                 os.system('cls' if os.name == 'nt' else 'clear')
