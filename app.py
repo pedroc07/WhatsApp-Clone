@@ -23,7 +23,7 @@ if abrir_chat == 1:
     #port2 = input("Digite a porta do destinatário: ")
     port2 = 8102
     #end2 = input("Digite o endereco do destinatário: ")
-    contatos = []
+    contatos = [("172.16.103.3", 8102)]
 elif abrir_chat == 2:
     contatos = []
 
@@ -56,6 +56,7 @@ def receive():
     while True:
         try:
             data, end = server.recvfrom(1024) 
+            connected = True
             p = data.decode('utf-8')
             pacote = json.loads(p)
             if pacote["tag"] == "ENTROU_TAG":
@@ -148,21 +149,24 @@ def receive():
                 ord_mensagens = ordena_msg(mensagens.values())
                 for m in ord_mensagens:
                     print(f"[{m[0]}]{m[1]}")
-        except:
-            pass
+        except socket.error:
+            connected = False
+            while not connected:
+                try:
+                    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    endereco = socket.gethostbyname(socket.gethostname())
+                    server.bind((endereco, int(port)))
+                    connected=True
+                except socket.error:
+                    time.sleep(2)
+
 
 def send(msg):
     for cliente in contatos:
-        try:
-            server.sendto(msg.encode('utf-8'), cliente)
-        except:
-            contatos.remove(cliente)
+        server.sendto(msg.encode('utf-8'), cliente)
 
 def sendto(msg, receptor):
-    try:
         server.sendto(msg.encode('utf-8'), receptor)
-    except:
-        contatos.remove(receptor)
 
 def envia_ids(cont):
     while cont < 30:
