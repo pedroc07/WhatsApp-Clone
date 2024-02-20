@@ -108,16 +108,21 @@ def receive():
                 for m in buffer_env.keys():
                     if m == pacote["msg"]:
                         ids.remove(m)
-                if len(ids) == 0:
-                    buffer_env = {} 
                 for i in ids:
-                    res_nack = json.dumps({"tag":"NACK_TAG", "msg":ids[i]})
+                    res_nack = json.dumps({"tag":"NACK_TAG", "id":i, "msg":buffer_env[i]})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
                 # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
-                msg_crypto = cipher_suite.encrypt(mensagens[pacote["msg"]].encode())
-                res = json.dumps({"tag":"MSG_TAG", "t":mensagens[pacote["msg"][0]], "id":pacote["msg"], "msg":msg_crypto})
+                msg_crypto = cipher_suite.encrypt(mensagens[pacote["msg"][1]].encode())
+                res = json.dumps({"tag":"MSG_NACK_TAG", "t":mensagens[pacote["msg"][0]], "id":pacote["id"], "msg":msg_crypto})
                 sendto(res, end)
+            elif pacote["tag"] == "MSG_NACK_TAG":
+                # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
+                msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
+                mensagens[pacote["id"]] = [pacote["t"], {msg_decrypto.decode('utf-8')}]
+                ord_mensagens = ordena_msg(mensagens.values())
+                for m in ord_mensagens:
+                    print(f"[{m[0]}]{m[1]}")
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] < int(pacote["t"]):
