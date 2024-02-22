@@ -107,12 +107,13 @@ def receive():
                 relogio_logico[0] = pacote["msg"][0]
             elif pacote["tag"] == "ID_TAG":
                 # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
+                possui = False
                 ids = list(buffer_env.keys())
-                for m in buffer_env.keys():
+                for m in ids:
                     if m == int(pacote["msg"]):
-                        ids.remove(m)
-                for i in ids:
-                    res_nack = json.dumps({"tag":"NACK_TAG", "id":i})
+                        possui = True
+                if not possui:
+                    res_nack = json.dumps({"tag":"NACK_TAG", "id":int(pacote["msg"])})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
                 msg_nack = mensagens[pacote["id"]]
