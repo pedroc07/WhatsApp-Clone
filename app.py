@@ -125,7 +125,7 @@ def receive():
             elif pacote["tag"] == "MSG_NACK_TAG":
                 # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
-                mensagens[pacote["id"]] = [pacote["t"], {msg_decrypto.decode('utf-8')}]
+                mensagens[pacote["id"]] = [pacote["t"], msg_decrypto.decode('utf-8')]
                 ord_mensagens = ordena_msg(mensagens.values())
                 for m in ord_mensagens:
                     print(f"[{m[0]}]{m[1]}")
