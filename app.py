@@ -148,8 +148,8 @@ def receive():
                     sv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                     end = socket.gethostbyname(socket.gethostname())
                     sv.bind((end, int(port)))
-                    res_cont = json.dumps({"tag":"SYNC_TAG"})
-                    send(res_cont)
+                    #res_cont = json.dumps({"tag":"SYNC_TAG"})
+                    #send(res_cont)
                     connected=True
                 except socket.error:
                     time.sleep(2)
@@ -160,9 +160,12 @@ def send(msg):
         try:
             server.sendto(msg.encode('utf-8'), cliente)
         except:
-            time.sleep(2)
-            server.sendto(msg.encode('utf-8'), cliente)
-
+            while not connected:
+                try:
+                    server.sendto(msg.encode('utf-8'), cliente)
+                    connected=True
+                except:
+                    time.sleep(2)
 
 def sendto(msg, receptor):
         server.sendto(msg.encode('utf-8'), receptor)
