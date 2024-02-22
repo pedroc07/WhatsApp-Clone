@@ -115,9 +115,10 @@ def receive():
                     res_nack = json.dumps({"tag":"NACK_TAG", "id":i})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
-                msg_crypto = cipher_suite.encrypt(mensagens[pacote["id"]].encode())
+                msg_nack = mensagens[pacote["id"]]
+                msg_crypto = cipher_suite.encrypt(msg_nack[1].encode('utf-8'))
                 # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
-                res = json.dumps({"tag":"MSG_NACK_TAG", "t":mensagens[pacote["msg"][0]], "id":pacote["id"], "msg":msg_crypto})
+                res = json.dumps({"tag":"MSG_NACK_TAG", "t":msg_nack[0], "id":pacote["id"], "msg":msg_crypto.decode('utf-8')})
                 sendto(res, end)
             elif pacote["tag"] == "MSG_NACK_TAG":
                 # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
