@@ -109,7 +109,7 @@ def receive():
                 # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
                 ids = list(buffer_env.keys())
                 for m in buffer_env.keys():
-                    if m == pacote["msg"]:
+                    if m == int(pacote["msg"]):
                         ids.remove(m)
                 for i in ids:
                     res_nack = json.dumps({"tag":"NACK_TAG", "id":i})
