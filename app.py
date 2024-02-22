@@ -109,7 +109,7 @@ def receive():
                 # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
                 if endereco != end:
                     possui = False
-                    ids = list(buffer_env.keys())
+                    ids = list(mensagens.keys())
                     for m in ids:
                         if m == int(pacote["msg"]):
                             possui = True
