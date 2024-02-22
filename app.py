@@ -14,8 +14,8 @@ from cryptography.fernet import Fernet
 import random
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#endereco = socket.gethostbyname(socket.gethostname())
-endereco = "192.168.0.103"
+endereco = socket.gethostbyname(socket.gethostname())
+#endereco = "192.168.0.103"
 port = 8102
 print(endereco, port)
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2 Release Candidate\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
