@@ -109,10 +109,13 @@ def receive():
                 # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
                 if endereco != end:
                     possui = False
+                    ids_outro = pacote["msg"]
+                    ids_outro.split(",")
                     ids = list(mensagens.keys())
-                    for m in ids:
-                        if m == int(pacote["msg"]):
-                            possui = True
+                    for i in ids:
+                        for j in ids_outro[:-1]:
+                            if i == j:
+                                possui = True
                     if not possui:
                         res_nack = json.dumps({"tag":"NACK_TAG", "id":int(pacote["msg"])})
                         send(res_nack)
@@ -167,8 +170,10 @@ def envia_ids(cont):
         cont += 1
         time.sleep(1)'''
     ids = list(mensagens.keys())
+    ids_str = ''
     for m in ids:
-        res = json.dumps({"tag":"ID_TAG", "msg":m})
+        ids_str += str(m) + ","
+    res = json.dumps({"tag":"ID_TAG", "msg":ids_str})
     if len(mensagens) > 0:
         send(res)
 
