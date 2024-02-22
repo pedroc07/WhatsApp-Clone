@@ -157,24 +157,15 @@ def receive():
 
 def send(msg):
     for cliente in contatos:
-        try:
-            server.sendto(msg.encode('utf-8'), cliente)
-        except:
-            connected = False
-            while not connected:
-                try:
-                    server.sendto(msg.encode('utf-8'), cliente)
-                    connected=True
-                except:
-                    time.sleep(2)
+        server.sendto(msg.encode('utf-8'), cliente)
 
 def sendto(msg, receptor):
         server.sendto(msg.encode('utf-8'), receptor)
 
 def envia_ids(cont):
-    while cont < 30:
+    '''while cont < 30:
         cont += 1
-        time.sleep(1)
+        time.sleep(1)'''
     ids = list(mensagens.keys())
     for m in ids:
         res = json.dumps({"tag":"ID_TAG", "msg":m})
@@ -216,9 +207,9 @@ while not sair_chat:
     relogio_logico[0] += 1
     id = uuid.uuid1()
     msg_crypto = cipher_suite.encrypt(msg.encode())
+    envia_ids(0)
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
-    buffer_env[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
     os.system('cls' if os.name == 'nt' else 'clear')
     ord_mensagens = ordena_msg(mensagens.values())
     for m in ord_mensagens:
