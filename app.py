@@ -160,6 +160,7 @@ def send(msg):
         try:
             server.sendto(msg.encode('utf-8'), cliente)
         except:
+            connected = False
             while not connected:
                 try:
                     server.sendto(msg.encode('utf-8'), cliente)
