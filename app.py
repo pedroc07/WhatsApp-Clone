@@ -117,7 +117,7 @@ def receive():
                             if i == j:
                                 possui = True
                     if not possui:
-                        res_nack = json.dumps({"tag":"NACK_TAG", "id":int(pacote["msg"])})
+                        res_nack = json.dumps({"tag":"NACK_TAG", "id":pacote["msg"]})
                         send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
                 if endereco != end:
@@ -166,9 +166,9 @@ def sendto(msg, receptor):
         server.sendto(msg.encode('utf-8'), receptor)
 
 def envia_ids(cont):
-    '''while cont < 30:
+    while cont < 30:
         cont += 1
-        time.sleep(1)'''
+        time.sleep(1)
     ids = list(mensagens.keys())
     ids_str = ''
     for m in ids:
@@ -180,8 +180,8 @@ def envia_ids(cont):
 t1 = threading.Thread(target=receive)
 t1.start()
 
-#t2 = threading.Thread(target=envia_ids, args=([0]))
-#t2.start()
+t2 = threading.Thread(target=envia_ids, args=([0]))
+t2.start()
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
@@ -212,7 +212,6 @@ while not sair_chat:
     relogio_logico[0] += 1
     id = uuid.uuid1()
     msg_crypto = cipher_suite.encrypt(msg.encode())
-    envia_ids(0)
     res = json.dumps({"tag":"MSG_TAG", "t":relogio_logico[0], "id":id.int, "msg":msg_crypto.decode('utf-8')})
     mensagens[id.int] = [relogio_logico[0], f"{nick}: {msg}"]
     os.system('cls' if os.name == 'nt' else 'clear')
