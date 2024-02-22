@@ -109,29 +109,26 @@ def receive():
                 # ANALISA OS IDS ENVIADOS POR UM OUTRO NÓ
                 if endereco != end:
                     possui = False
-                    ids_outro = pacote["msg"]
-                    ids_outro.split(",")
                     ids = list(mensagens.keys())
-                    for i in ids:
-                        for j in ids_outro[:-1]:
-                            if i == j:
-                                possui = True
+                    for m in ids:
+                        if m == int(pacote["msg"]):
+                            possui = True
                     if not possui:
-                        res_nack = json.dumps({"tag":"NACK_TAG", "id":pacote["msg"]})
+                        res_nack = json.dumps({"tag":"NACK_TAG", "id":int(pacote["msg"])})
                         send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
-                if endereco != end:
-                    msg_nack = mensagens[pacote["id"]]
-                    # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
-                    res = json.dumps({"tag":"MSG_NACK_TAG", "t":msg_nack[0], "id":pacote["id"], "msg":msg_nack})
-                    sendto(res, end)
+                msg_nack = mensagens[pacote["id"]]
+                msg_crypto = cipher_suite.encrypt(msg_nack[1].encode('utf-8'))
+                # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
+                res = json.dumps({"tag":"MSG_NACK_TAG", "t":msg_nack[0], "id":pacote["id"], "msg":msg_crypto.decode('utf-8')})
+                sendto(res, end)
             elif pacote["tag"] == "MSG_NACK_TAG":
-                if endereco != end:
-                    # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
-                    mensagens[pacote["id"]] = [pacote["t"], pacote["msg"]]
-                    ord_mensagens = ordena_msg(mensagens.values())
-                    for m in ord_mensagens:
-                        print(f"[{m[0]}]{m[1]}")
+                # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
+                msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
+                mensagens[pacote["id"]] = [pacote["t"], msg_decrypto.decode('utf-8')]
+                ord_mensagens = ordena_msg(mensagens.values())
+                for m in ord_mensagens:
+                    print(f"[{m[0]}]{m[1]}")
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] <= int(pacote["t"]):
@@ -170,18 +167,15 @@ def envia_ids(cont):
         cont += 1
         time.sleep(1)
     ids = list(mensagens.keys())
-    ids_str = ''
     for m in ids:
-        ids_str += str(m) + ","
-    res = json.dumps({"tag":"ID_TAG", "msg":ids_str})
-    if len(mensagens) > 0:
+        res = json.dumps({"tag":"ID_TAG", "msg":m})
         send(res)
 
 t1 = threading.Thread(target=receive)
 t1.start()
 
-t2 = threading.Thread(target=envia_ids, args=([0]))
-t2.start()
+#t2 = threading.Thread(target=envia_ids, args=([0]))
+#t2.start()
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
