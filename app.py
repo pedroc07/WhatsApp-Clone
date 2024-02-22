@@ -148,6 +148,8 @@ def receive():
                     sv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                     end = socket.gethostbyname(socket.gethostname())
                     sv.bind((end, int(port)))
+                    res_cont = json.dumps({"tag":"SYNC_TAG"})
+                    send(res_cont)
                     connected=True
                 except socket.error:
                     time.sleep(2)
@@ -173,8 +175,8 @@ def envia_ids(cont):
 t1 = threading.Thread(target=receive)
 t1.start()
 
-t2 = threading.Thread(target=envia_ids, args=([0]))
-t2.start()
+#t2 = threading.Thread(target=envia_ids, args=([0]))
+#t2.start()
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
