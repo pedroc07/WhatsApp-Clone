@@ -117,18 +117,20 @@ def receive():
                         res_nack = json.dumps({"tag":"NACK_TAG", "id":int(pacote["msg"])})
                         send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
-                msg_nack = mensagens[pacote["id"]]
-                msg_crypto = cipher_suite.encrypt(msg_nack[1].encode('utf-8'))
-                # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
-                res = json.dumps({"tag":"MSG_NACK_TAG", "t":msg_nack[0], "id":pacote["id"], "msg":msg_crypto.decode('utf-8')})
-                sendto(res, end)
+                if endereco != end:
+                    msg_nack = mensagens[pacote["id"]]
+                    msg_crypto = cipher_suite.encrypt(msg_nack[1].encode('utf-8'))
+                    # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
+                    res = json.dumps({"tag":"MSG_NACK_TAG", "t":msg_nack[0], "id":pacote["id"], "msg":msg_crypto.decode('utf-8')})
+                    sendto(res, end)
             elif pacote["tag"] == "MSG_NACK_TAG":
-                # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
-                msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
-                mensagens[pacote["id"]] = [pacote["t"], msg_decrypto.decode('utf-8')]
-                ord_mensagens = ordena_msg(mensagens.values())
-                for m in ord_mensagens:
-                    print(f"[{m[0]}]{m[1]}")
+                if endereco != end:
+                    # REGISTRA UMA MENSAGEM RECEBIDA ATRAVES DE SOLICITAÇÃO NACK
+                    msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
+                    mensagens[pacote["id"]] = [pacote["t"], msg_decrypto.decode('utf-8')]
+                    ord_mensagens = ordena_msg(mensagens.values())
+                    for m in ord_mensagens:
+                        print(f"[{m[0]}]{m[1]}")
             elif pacote["tag"] == "MSG_TAG":
                 msg_decrypto = cipher_suite.decrypt(pacote['msg'].encode())
                 if relogio_logico[0] <= int(pacote["t"]):
