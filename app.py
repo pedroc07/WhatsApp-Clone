@@ -14,8 +14,8 @@ from cryptography.fernet import Fernet
 import random
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-endereco = socket.gethostbyname(socket.gethostname())
-#endereco = "192.168.0.103"
+#endereco = socket.gethostbyname(socket.gethostname())
+endereco = "192.168.0.103"
 port = 8102
 print(endereco, port)
 abrir_chat = int(input("Serviço de mensagens Whatsapp 2 Release Candidate\n[1]Conectar-se a um chat já estabelecido\n[2]Criar um novo chat\nEscolha:"))
@@ -112,11 +112,11 @@ def receive():
                     if m == pacote["msg"]:
                         ids.remove(m)
                 for i in ids:
-                    res_nack = json.dumps({"tag":"NACK_TAG", "id":i, "msg":buffer_env[i]})
+                    res_nack = json.dumps({"tag":"NACK_TAG", "id":i})
                     send(res_nack)
             elif pacote["tag"] == "NACK_TAG":
+                msg_crypto = cipher_suite.encrypt(mensagens[pacote["id"]].encode())
                 # RESPONDE A SOLICITAÇÃO DE UM NÓ O ENVIANDO UM NACK
-                msg_crypto = cipher_suite.encrypt(mensagens[pacote["msg"][1]].encode())
                 res = json.dumps({"tag":"MSG_NACK_TAG", "t":mensagens[pacote["msg"][0]], "id":pacote["id"], "msg":msg_crypto})
                 sendto(res, end)
             elif pacote["tag"] == "MSG_NACK_TAG":
