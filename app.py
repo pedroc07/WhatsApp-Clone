@@ -157,7 +157,12 @@ def receive():
 
 def send(msg):
     for cliente in contatos:
-        server.sendto(msg.encode('utf-8'), cliente)
+        try:
+            server.sendto(msg.encode('utf-8'), cliente)
+        except:
+            time.sleep(2)
+            server.sendto(msg.encode('utf-8'), cliente)
+
 
 def sendto(msg, receptor):
         server.sendto(msg.encode('utf-8'), receptor)
