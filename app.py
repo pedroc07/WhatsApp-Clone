@@ -167,15 +167,18 @@ def envia_ids(cont):
         cont += 1
         time.sleep(1)
     ids = list(mensagens.keys())
-    for m in ids:
+    '''for m in ids:
         res = json.dumps({"tag":"ID_TAG", "msg":m})
-        send(res)
+        send(res)'''
+    for m in mensagens:
+        res_historico = json.dumps({"tag":"HISTORICO_TAG", "t":0, "id":m, "msg":mensagens[m]})
+        send(res_historico)
 
 t1 = threading.Thread(target=receive)
 t1.start()
 
-#t2 = threading.Thread(target=envia_ids, args=([0]))
-#t2.start()
+t2 = threading.Thread(target=envia_ids, args=([0]))
+t2.start()
 
 # ENVIA UMA MENSAGEM PARA O IP PELO QUAL ENTROU NO CHAT
 # ANUNCIANDO SUA ENTRADA
