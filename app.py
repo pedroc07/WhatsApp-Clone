@@ -162,8 +162,9 @@ def envia_ids(cont):
     while cont < 30:
         cont += 1
         time.sleep(1)
-    for m in mensagens:
-        res = json.dumps({"tag":"ID_TAG", "msg":m})
+    ids = list(mensagens.keys())
+    for m in ids:
+        res = json.dumps({"tag":"ID_TAG", "msg":id})
     if len(mensagens) > 0:
         send(res)
 
