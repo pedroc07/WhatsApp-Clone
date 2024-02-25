@@ -8,7 +8,7 @@ Cumpridos os requisitos da primeira versão do sistema de troca de mensagens, ve
 
 Para cumprir tais requisitos, vários algoritmos foram discutidos e apresentados durante as sessões, porém decidi utilizar o algoritmo de difusão confiável baseado em Nack. Esse algoritmo funciona da seguinte forma: uma sequência de mensagens é enviada para um grupo de nós, caso algum dos receptores note a falta de uma mensagem, ele envia um Nack para os outros receptores e para o transmissor solicitando a mensagem que está faltando. Um dos problemas dessa implementação é a explosão de retransmissões causada pelo envio das retransmissões por todos os nós do sistema, o problema pode ser resolvido através do uso de um buffer de mensagens onde ficam guardadas as mensagens recebidas e que podem ser retransmitidas através de um Nack caso algum nó solicite. Ao perceber que todos os outros nós possuem determinada mensagem, o nó a exclui do buffer. O problema também pode ser resolvido através de um contador de tempo nos nós que aguarda um tempo aleatório para enviar a mensagem solicitada, como o tempo aleatório vai ser diferente para cada nó, nenhum deles vai enviar simultaneamente e após o primeiro fazer o envio da mensagem os outros podem cancelá-lo.
 
-
+[!alt text](https://imgur.com/a/hqJSKNr)
 
 ### Metodologia
 
