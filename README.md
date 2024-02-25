@@ -25,4 +25,5 @@ O processo de implementação do novo programa começou bem e, apesar de não at
 ### Referências
 
 Lamport, L. (1978). Time, clocks, and the ordering of events in a distributed system. Communications of the ACM, pages 558–565.
+
 Lung, L. Comunicação de Grupo: Disfusão Confiável e Atômica.
